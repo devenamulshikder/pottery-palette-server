@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -35,12 +35,34 @@ async function run() {
       res.send(result);
     });
 
-    app.get('/pottery', async(req, res)=>{
+    app.get("/pottery", async (req, res) => {
       const cursor = potteryCollectin.find();
-      const result = await cursor.toArray()
-      res.send(result)
-    })
-    
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/pottery/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await potteryCollectin.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/myartcraftlist/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = potteryCollectin.find({ userEmail: email });
+      const result = await query.toArray();
+      res.send(result);
+    });
+
+    app.delete("/pottery/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await potteryCollectin.deleteOne(query);
+      res.send(result);
+    });
+
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
