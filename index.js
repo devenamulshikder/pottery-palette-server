@@ -53,7 +53,6 @@ async function run() {
 
     app.get("/challanging/:subcategory_name", async (req, res) => {
       const subcategoryName = req.params.subcategory_name;
-      console.log(subcategoryName);
       const query = potteryCollectin.find({
         subcategory_name: subcategoryName,
       });
