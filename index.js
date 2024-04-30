@@ -28,9 +28,18 @@ async function run() {
     // );
 
     const potteryCollectin = client.db("potteryDB").collection("pottery");
+    const challangeCollection = client
+      .db("potteryDB")
+      .collection("challanging");
 
     app.get("/pottery", async (req, res) => {
       const cursor = potteryCollectin.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/challanging", async (req, res) => {
+      const cursor = challangeCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -42,12 +51,15 @@ async function run() {
       res.send(result);
     });
 
-    // app.get("/pottery/:id", async (req, res) => {
-    //   const id = req.params.id;
-    //   const query = { _id: new ObjectId(id) };
-    //   const result = await potteryCollectin.findOne(query);
-    //   res.send(result);
-    // });
+    app.get("/challanging/:subcategory_name", async (req, res) => {
+      const subcategoryName = req.params.subcategory_name;
+      console.log(subcategoryName);
+      const query = potteryCollectin.find({
+        subcategory_name: subcategoryName,
+      });
+      const result = await query.toArray();
+      res.send(result);
+    });
 
     app.get("/myartcraftlist/:email", async (req, res) => {
       const email = req.params.email;
